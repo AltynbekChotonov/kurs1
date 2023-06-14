@@ -1,7 +1,7 @@
 void main(List<String> args) {
-  //int kurs1 =12;
-  //bool if = true;
-  //constFunc();
+  int kurs1 =12;
+  bool if = true;
+  constFunc();
   var s;
   print(s);
 }
@@ -9,7 +9,7 @@ void main(List<String> args) {
 constFunc() {
   const int a = 34;
   print(a);
-  //a = 43;
+  a = 43;
 }
      
      // ТАПШЫРМА
