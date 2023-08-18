@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:sabak_kaitaloo_f10/user_model.dart';
-
 import 'users.dart';
 
 void main() {
