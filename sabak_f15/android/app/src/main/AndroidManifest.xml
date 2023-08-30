@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sabak16_f14">
+    package="com.example.sabak_f15">
    <application
-        android:label="sabak16_f14"
+        android:label="sabak_f15"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

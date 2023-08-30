@@ -1,4 +1,4 @@
-name: sabak16_f14
+name: sabak_f15
 description: A new Flutter project.
 
 publish_to: "none"
@@ -22,8 +22,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  assets:
-    - assets/
+assets:
+  - assets/
   #   - images/a_dot_ham.jpeg
 
   # fonts:

@@ -53,7 +53,7 @@ class _Hame2PageState extends State<Hame2Page> {
   }
 }
 
-class Diceimage2 extends StatefulWidget {
+class Diceimage2 extends StatelessWidget {
   Diceimage2({
     super.key,
     this.onTap,
@@ -64,18 +64,13 @@ class Diceimage2 extends StatefulWidget {
   final void Function()? onTap;
 
   @override
-  State<Diceimage2> createState() => _Diceimage2State();
-}
-
-class _Diceimage2State extends State<Diceimage2> {
-  @override
   Widget build(BuildContext context) {
     return Expanded(
         child: InkWell(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Image.asset('/dice${widget.index}.png'),
+        child: Image.asset('/dice$index.png'),
       ),
     ));
   }
