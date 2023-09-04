@@ -2,12 +2,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 
 class PianoWhiteButton extends StatelessWidget {
-  const PianoWhiteButton(
-    this.color, {
-    Key? key,
-  }) : super(key: key);
+  const PianoWhiteButton(this.nota, {Key? key}) : super(key: key);
 
-  final Color color;
+  final String nota;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +15,7 @@ class PianoWhiteButton extends StatelessWidget {
         child: ElevatedButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith(
-              (states) => color,
+              (states) => Colors.white,
             ),
             overlayColor: MaterialStateProperty.resolveWith(
               (states) {
@@ -30,7 +27,12 @@ class PianoWhiteButton extends StatelessWidget {
           ),
           onPressed: () async {
             await AssetsAudioPlayer.newPlayer().open(
-              Audio("assets/audios/do.wav"),
+              Audio("/audios/$nota.wav"),
+            );
+          },
+          onLongPress: () async {
+            await AssetsAudioPlayer.newPlayer().open(
+              Audio("/audios/$nota.wav"),
             );
           },
           child: const Align(

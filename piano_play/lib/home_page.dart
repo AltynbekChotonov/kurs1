@@ -1,3 +1,4 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:piano_app/components/piano_white_button.dart';
 
@@ -36,13 +37,13 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      PianoWhiteButton(Colors.white),
-                      PianoWhiteButton(Colors.white),
-                      PianoWhiteButton(Colors.white),
-                      PianoWhiteButton(Colors.white),
-                      PianoWhiteButton(Colors.white),
-                      PianoWhiteButton(Colors.white),
-                      PianoWhiteButton(Colors.white),
+                      PianoWhiteButton('do'),
+                      PianoWhiteButton('re'),
+                      PianoWhiteButton('mi'),
+                      PianoWhiteButton('fa'),
+                      PianoWhiteButton('lya'),
+                      PianoWhiteButton('si'),
+                      PianoWhiteButton('do2'),
                     ],
                   ),
                   Positioned(
@@ -52,12 +53,12 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        PianoBlackButton(),
-                        PianoBlackButton(),
-                        PianoBlackButton(),
-                        PianoBlackButton(visible: false),
-                        PianoBlackButton(),
-                        PianoBlackButton(),
+                        PianoBlackButton('do'),
+                        PianoBlackButton('re'),
+                        PianoBlackButton('mi'),
+                        PianoBlackButton('fa', visible: false),
+                        PianoBlackButton('lya'),
+                        PianoBlackButton('si'),
                       ],
                     ),
                   )
@@ -72,8 +73,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class PianoBlackButton extends StatelessWidget {
-  const PianoBlackButton({Key? key, this.visible = true}) : super(key: key);
+  const PianoBlackButton(this.nota, {Key? key, this.visible = true})
+      : super(key: key);
   final bool visible;
+  final String nota;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +100,16 @@ class PianoBlackButton extends StatelessWidget {
                   },
                 ),
               ),
-              onPressed: () {},
+              onPressed: () async {
+                await AssetsAudioPlayer.newPlayer().open(
+                  Audio("/audios/$nota.wav"),
+                );
+              },
+              onLongPress: () async {
+                await AssetsAudioPlayer.newPlayer().open(
+                  Audio("/audios/$nota.wav"),
+                );
+              },
               child: const Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(

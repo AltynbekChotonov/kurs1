@@ -15,7 +15,7 @@ class PianoBlackButton extends StatelessWidget {
             overlayColor: MaterialStateProperty.resolveWith(
               (states) {
                 return states.contains(MaterialState.pressed)
-                    ? Color.fromARGB(255, 69, 68, 68)
+                    ? const Color.fromARGB(255, 69, 68, 68)
                     : null;
               },
             ),
