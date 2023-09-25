@@ -43,7 +43,7 @@ class _TestPageState extends State<TestPage> {
                 ),
               ),
             ),
-            Text('3'),
+            const Text('3'),
             Row(
               children: [
                 SizedBox(
@@ -53,7 +53,7 @@ class _TestPageState extends State<TestPage> {
                       scrollDirection: Axis.horizontal,
                       itemCount: 3,
                       itemBuilder: (context, index) {
-                        return Icon(
+                        return const Icon(
                           Icons.favorite,
                           color: AppColors.red,
                         );
@@ -61,7 +61,7 @@ class _TestPageState extends State<TestPage> {
                 ),
 
                 /// SizedBox(width: 5),
-                Icon(Icons.more_vert),
+                const Icon(Icons.more_vert),
               ],
             ),
           ],
