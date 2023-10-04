@@ -20,17 +20,6 @@ class _TestPageState extends State<TestPage> {
   int tuuraJooptor = 0;
   int KataJooptor = 0;
 
-  // void check(bool isTrue) {
-  //   if (isTrue == true) {
-  //     tuuraJooptor++;
-  //   } else {
-  //     KataJooptor++;
-  //   }
-
-  //   setState(() {
-  //     index++;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +67,7 @@ class _TestPageState extends State<TestPage> {
                           setState(() {});
                           Navigator.pop(context);
                         },
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
                     ],
                   ),

@@ -22,20 +22,20 @@ class TestPageAppBarTitle extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             child: Row(
               children: [
                 Text(
                   '$KataJooptor',
-                  style: TextStyle(color: AppColors.red, fontSize: 15),
+                  style: const TextStyle(color: AppColors.red, fontSize: 15),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Text('32', style: TextStyle(fontSize: 18)),
                 ),
                 Text(
                   '$tuuraJooptor',
-                  style: TextStyle(color: AppColors.green, fontSize: 15),
+                  style: const TextStyle(color: AppColors.green, fontSize: 15),
                 ),
               ],
             ),
