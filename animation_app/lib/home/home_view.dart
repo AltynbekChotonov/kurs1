@@ -62,10 +62,10 @@ class _HomeViewState extends State<HomeView> {
           children: [
             AnimatedPositioned(
               left: 40,
-              // right: 0,
+              right: 0,
               bottom: isfillSan ? 15 : -140,
               duration: duration,
-              child: SvgPicture.asset('/sun.svg'),
+              child: SvgPicture.asset("/sun.svg"),
             ),
             Positioned(
               left: 0,
@@ -73,14 +73,14 @@ class _HomeViewState extends State<HomeView> {
               bottom: -34,
               // duration: duration,
               child: Image.asset(
-                '/land_tree_light.png',
+                "/land_tree_light.png",
                 height: height * 0.48,
                 fit: BoxFit.fitHeight,
               ),
             ),
             Container(
-              width: width * 0.8,
-              height: 70,
+              width: width * 0.9,
+              height: 55,
               margin: const EdgeInsets.fromLTRB(20, 100, 20, 0),
               decoration: BoxDecoration(
                 color: Colors.white24,
