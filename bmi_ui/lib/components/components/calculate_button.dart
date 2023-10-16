@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../utils/app_colors.dart';
+import '../../utils/app_text.dart';
 
 class CalculateButton extends StatelessWidget {
   const CalculateButton({
@@ -17,7 +18,7 @@ class CalculateButton extends StatelessWidget {
         color: AppColor.buttonColor,
         child: const Center(
             child: Text(
-          'CALCULATE',
+          AppText.calculate,
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.w700,
