@@ -6,6 +6,7 @@ import '../../utils/app_text.dart';
 class CalculateButton extends StatelessWidget {
   const CalculateButton({
     super.key,
+    required Null Function() onTap,
   });
 
   @override

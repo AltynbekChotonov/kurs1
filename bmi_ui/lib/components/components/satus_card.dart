@@ -5,28 +5,15 @@ import '../../utils/app_colors.dart';
 class SatusCard extends StatelessWidget {
   const SatusCard({
     Key? key,
-    required this.icon,
-    required this.text,
+    required this.child,
   }) : super(key: key);
-  final IconData icon;
-  final String text;
+
+  final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Card(
-        color: AppColor.cardColor,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 80),
-            const SizedBox(height: 10),
-            Text(
-              text,
-              style: const TextStyle(color: AppColor.greyText, fontSize: 24),
-            ),
-          ],
-        ),
-      ),
+      child: Card(color: AppColor.cardColor, child: child),
     );
   }
 }
