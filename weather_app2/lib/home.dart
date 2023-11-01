@@ -1,7 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import 'package:weather_app2/constants/api_const.dart';
+import 'package:weather_app2/constants/app_colors.dart';
+import 'package:weather_app2/constants/app_text.dart';
+import 'package:weather_app2/constants/app_text_style.dart';
 import 'package:weather_app2/models/weather.dart';
+
+import 'components/custom_icon_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,32 +45,67 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Homepage'),
-      ),
-      body: Center(
-        child: FutureBuilder(
-          future: fetchData(),
-          builder: (ctx, sn) {
-            if (sn.hasData) {
-              return Column(
-                children: [
-                  Text(sn.data!.id.toString()),
-                  Text(sn.data!.description),
-                  Text(sn.data!.main),
-                  Text(sn.data!.icon),
-                  Text(sn.data!.city),
-                  Text(sn.data!.country),
-                  Text(sn.data!.temp.toString()),
-                ],
-              );
-            } else if (sn.hasError) {
-              return Text(sn.error.toString());
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
+        centerTitle: true,
+        backgroundColor: AppColors.white,
+        title: const Text(
+          AppText.appBarTitle,
+          style: AppTextStyle.AppBar,
         ),
       ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('weather.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomIconButton(icon: Icons.near_me),
+                CustomIconButton(icon: Icons.location_city),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(width: 20),
+                Text('8', style: AppTextStyle.body1),
+                Image.network(
+                  ApiConst.getIcon('11n', 4),
+                  height: 120,
+                  fit: BoxFit.fitHeight,
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+      // body: Center(
+      //   child: FutureBuilder(
+      //     future: fetchData(),
+      //     builder: (ctx, sn) {
+      //       if (sn.hasData) {
+      //         return Column(
+      //           children: [
+      //             Text(sn.data!.id.toString()),
+      //             Text(sn.data!.description),
+      //             Text(sn.data!.main),
+      //             Text(sn.data!.icon),
+      //             Text(sn.data!.city),
+      //             Text(sn.data!.country),
+      //             Text(sn.data!.temp.toString()),
+      //           ],
+      //         );
+      //       } else if (sn.hasError) {
+      //         return Text(sn.error.toString());
+      //       } else {
+      //         return const CircularProgressIndicator();
+      //       }
+      //     },
+      //   ),
+      // ),
     );
   }
 }
