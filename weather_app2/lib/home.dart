@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:weather_app2/constants/api_const.dart';
 import 'package:weather_app2/constants/app_colors.dart';
@@ -20,10 +21,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<Weather?>? fetchData() async {
+  Future<void> weatherLocatio() async {
+    log('-----------------');
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.always &&
+          permission == LocationPermission.whileInUse) {
+        await fetchData();
+      }
+    } else {
+      Position position = await Geolocator.getCurrentPosition();
+      await fetchData(
+          ApiConst.LatLongaddress(position.latitude, position.longitude));
+      // print(position.latitude);
+      // print(position.longitude);
+    }
+  }
+
+  Future<Weather?>? fetchData([String? url]) async {
     // await Future.delayed(Duration(seconds: 3));
     final dio = Dio();
-    final res = await dio.get(ApiConst.address);
+    final res = await dio.get(url ?? ApiConst.address);
     if (res.statusCode == 200) {
       final Weather weather = Weather(
         id: res.data['weather'][0]['id'],
@@ -76,16 +95,25 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomIconButton(icon: Icons.near_me),
-                          CustomIconButton(icon: Icons.location_city),
+                          CustomIconButton(
+                            icon: Icons.near_me,
+                            onPressed: () async {
+                              await weatherLocatio();
+                            },
+                          ),
+                          CustomIconButton(
+                            icon: Icons.location_city,
+                            onPressed: () {},
+                          ),
                         ],
                       ),
                       Row(
                         children: [
                           SizedBox(width: 20),
-                          Text('${Weather.temp}', style: AppTextStyle.body1),
+                          Text('${(Weather.temp - 273.15).floorToDouble()}',
+                              style: AppTextStyle.body1),
                           Image.network(
-                            ApiConst.getIcon('11n', 4),
+                            ApiConst.getIcon(Weather.icon, 4),
                             height: 150,
                             fit: BoxFit.fitHeight,
                           )
@@ -107,10 +135,14 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            Weather.city,
-                            textAlign: TextAlign.right,
-                            style: AppTextStyle.body1,
+                          Expanded(
+                            child: FittedBox(
+                              child: Text(
+                                Weather.city,
+                                textAlign: TextAlign.right,
+                                style: AppTextStyle.body1,
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 10),
                         ],
