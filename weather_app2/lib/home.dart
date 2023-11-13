@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -13,6 +12,17 @@ import 'package:weather_app2/models/weather.dart';
 
 import 'components/custom_icon_button.dart';
 
+const List citiles = <String>[
+  'Bishkek',
+  'Osh',
+  'Jalal-Abad',
+  'Karakol',
+  'Batken',
+  'Naryn',
+  'Talas',
+  'Tokmok',
+];
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -21,30 +31,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Weather? weather;
+
   Future<void> weatherLocatio() async {
-    log('-----------------');
+    setState(() {
+      weather = null;
+    });
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.always &&
           permission == LocationPermission.whileInUse) {
-        await fetchData();
+        Position position = await Geolocator.getCurrentPosition();
+        final dio = Dio();
+        final res = await dio.get(
+            ApiConst.LatLongaddress(position.latitude, position.longitude));
+        if (res.statusCode == 200) {
+          weather = Weather(
+            id: res.data['country']['weather'][0]['id'],
+            main: res.data['country']['weather'][0]['main'],
+            description: res.data['country']['weather'][0]['description'],
+            icon: res.data['country']['weather'][0]['icon'],
+            city: res.data['timezone'],
+            temp: res.data['country']['temp'],
+          );
+        }
+        setState(() {});
       }
     } else {
       Position position = await Geolocator.getCurrentPosition();
-      await fetchData(
-          ApiConst.LatLongaddress(position.latitude, position.longitude));
-      // print(position.latitude);
-      // print(position.longitude);
+      final dio = Dio();
+      final res = await dio
+          .get(ApiConst.LatLongaddress(position.latitude, position.longitude));
+      if (res.statusCode == 200) {
+        weather = Weather(
+          id: res.data['country']['weather'][0]['id'],
+          main: res.data['country']['weather'][0]['main'],
+          description: res.data['country']['weather'][0]['description'],
+          icon: res.data['country']['weather'][0]['icon'],
+          city: res.data['timezone'],
+          temp: res.data['country']['temp'],
+        );
+      }
+      setState(() {});
     }
   }
 
-  Future<Weather?>? fetchData([String? url]) async {
+  Future<void> weatherName([String? name]) async {
     // await Future.delayed(Duration(seconds: 3));
     final dio = Dio();
-    final res = await dio.get(url ?? ApiConst.address);
+    final res = await dio.get(ApiConst.address(name ?? 'Bishkek'));
     if (res.statusCode == 200) {
-      final Weather weather = Weather(
+      weather = Weather(
         id: res.data['weather'][0]['id'],
         main: res.data['weather'][0]['main'],
         description: res.data['weather'][0]['description'],
@@ -53,8 +91,14 @@ class _HomePageState extends State<HomePage> {
         temp: res.data["main"]['temp'],
         country: res.data['sys']['country'],
       );
-      return weather;
+      setState(() {});
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    weatherName();
   }
 
   @override
@@ -70,95 +114,116 @@ class _HomePageState extends State<HomePage> {
           style: AppTextStyle.AppBar,
         ),
       ),
-      body: FutureBuilder<Weather?>(
-          future: fetchData(),
-          builder: (context, joop) {
-            if (joop.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (joop.connectionState == ConnectionState.none) {
-              return Text('Интернертен байланышы жакшы эмес');
-            } else if (joop.connectionState == ConnectionState.done) {
-              if (joop.hasError) {
-                return Text('${joop.error}');
-              } else if (joop.hasData) {
-                final Weather = joop.data!;
-                return Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('weather.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Column(
+      body: weather == null
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('weather.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomIconButton(
-                            icon: Icons.near_me,
-                            onPressed: () async {
-                              await weatherLocatio();
-                            },
-                          ),
-                          CustomIconButton(
-                            icon: Icons.location_city,
-                            onPressed: () {},
-                          ),
-                        ],
+                      CustomIconButton(
+                        icon: Icons.near_me,
+                        onPressed: () async {
+                          await weatherLocatio();
+                        },
                       ),
-                      Row(
-                        children: [
-                          SizedBox(width: 20),
-                          Text('${(Weather.temp - 273.15).floorToDouble()}',
-                              style: AppTextStyle.body1),
-                          Image.network(
-                            ApiConst.getIcon(Weather.icon, 4),
-                            height: 150,
-                            fit: BoxFit.fitHeight,
-                          )
-                        ],
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "${Weather.description}".replaceAll(' ', '\n'),
-                              textAlign: TextAlign.right,
-                              style: AppTextStyle.body2(60),
-                            ),
-                            const SizedBox(width: 20),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: FittedBox(
-                              child: Text(
-                                Weather.city,
-                                textAlign: TextAlign.right,
-                                style: AppTextStyle.body1,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
+                      CustomIconButton(
+                        icon: Icons.location_city,
+                        onPressed: () {
+                          showBottom();
+                        },
                       ),
                     ],
                   ),
-                );
-              } else {
-                return const Text(
-                    'Бир белгисиз ката болду сураныч кайра кириниз... ');
-              }
-            } else {
-              return const Text(
-                  'Бир белгисиз ката болду сураныч кайра кириниз... ');
-            }
-          }),
+                  Row(
+                    children: [
+                      const SizedBox(width: 20),
+                      Text('${(weather!.temp - 273.15).floorToDouble()}',
+                          style: AppTextStyle.body1),
+                      Image.network(
+                        ApiConst.getIcon(weather!.icon, 4),
+                        height: 150,
+                        fit: BoxFit.fitHeight,
+                      )
+                    ],
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FittedBox(
+                          child: Text(
+                            weather!.description.replaceAll(' ', '\n'),
+                            textAlign: TextAlign.right,
+                            style: AppTextStyle.body2(60),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: FittedBox(
+                          child: Text(
+                            weather!.city,
+                            textAlign: TextAlign.right,
+                            style: AppTextStyle.body1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
     );
+  }
+
+  void showBottom() {
+    showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            padding: const EdgeInsets.fromLTRB(15, 20, 15, 7),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 18, 18, 18),
+              border: Border.all(color: AppColors.white),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+              ),
+            ),
+            child: ListView.builder(
+                itemCount: citiles.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final city = citiles[index];
+                  return Card(
+                      child: ListTile(
+                    onTap: () async {
+                      setState(() {
+                        weather = null;
+                      });
+                      weatherName(city);
+                      Navigator.pop(context);
+                    },
+                    title: Text(city),
+                  ));
+                }),
+          );
+        });
   }
 }
