@@ -1,4 +1,4 @@
-package com.example.weater_app1
+package com.example.counter_getx
 
 import io.flutter.embedding.android.FlutterActivity
 
