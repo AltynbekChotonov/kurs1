@@ -22,6 +22,7 @@ class CounterGetxPage extends StatelessWidget {
                 'You have pushed the button this many times:',
               ),
               Obx(() {
+                // print('Obx ishtedi');
                 return Text(
                   '${Controller.count}',
                   style: Theme.of(context).textTheme.headlineMedium,
