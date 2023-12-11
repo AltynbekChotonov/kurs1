@@ -1,3 +1,4 @@
+import 'package:bloc_counter_app/exampl2/detail_page2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,6 +52,17 @@ class _MyHomePage2State extends State<MyHomePage2> {
                 );
               },
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => const Detail2Page(),
+                  ),
+                );
+              },
+              child: const Text('go detail'),
+            )
           ],
         ),
       ),
@@ -67,4 +79,5 @@ class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
 
   increment() => emit(state + 1);
+  decrement() => emit(state - 1);
 }
